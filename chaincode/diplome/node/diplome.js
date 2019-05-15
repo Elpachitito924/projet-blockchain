@@ -10,15 +10,15 @@ const util = require('util');
 
 let Chaincode = class {
 
-  // The Init method is called when the Smart Contract 'fabcar' is instantiated by the blockchain network
+  // The Init method is called when the Smart Contract 'diplome' is instantiated by the blockchain network
   // Best practice is to have any Ledger initialization in separate function -- see initLedger()
   async Init(stub) {
-    console.info('=========== Instantiated fabcar chaincode ===========');
+    console.info('=========== Instantiated diplome chaincode ===========');
     return shim.success();
   }
 
   // The Invoke method is called as a result of an application request to run the Smart Contract
-  // 'fabcar'. The calling application program has also specified the particular smart contract
+  // 'diplome'. The calling application program has also specified the particular smart contract
   // function to be called, with arguments
   async Invoke(stub) {
     let ret = stub.getFunctionAndParameters();
@@ -38,114 +38,114 @@ let Chaincode = class {
     }
   }
 
-  async queryCar(stub, args) {
+  async queryDiplome(stub, args) {
     if (args.length != 1) {
-      throw new Error('Incorrect number of arguments. Expecting CarNumber ex: CAR01');
+      throw new Error('Incorrect number of arguments. Expecting DiplomeNumber ex: DIP01');
     }
-    let carNumber = args[0];
+    let dipNumber = args[0];
 
-    let carAsBytes = await stub.getState(carNumber); //get the car from chaincode state
-    if (!carAsBytes || carAsBytes.toString().length <= 0) {
-      throw new Error(carNumber + ' does not exist: ');
+    let dipAsBytes = await stub.getState(dipNumber); //get the dip from chaincode state
+    if (!dipAsBytes || dipAsBytes.toString().length <= 0) {
+      throw new Error(dipNumber + ' does not exist: ');
     }
-    console.log(carAsBytes.toString());
-    return carAsBytes;
+    console.log(dipAsBytes.toString());
+    return dipAsBytes;
   }
 
   async initLedger(stub, args) {
     console.info('============= START : Initialize Ledger ===========');
-    let cars = [];
-    cars.push({
-      make: 'Toyota',
-      model: 'Prius',
-      color: 'blue',
-      owner: 'Tomoko'
+    let dips = [];
+    dips.push({
+      university: 'Yale',
+      degree: 'Mathematics',
+      spe: 'Finances',
+      owner: 'Juan'
     });
-    cars.push({
-      make: 'Ford',
-      model: 'Mustang',
-      color: 'red',
-      owner: 'Brad'
+    dips.push({
+      university: 'ESME',
+      degree: 'Hacker',
+      spe: 'Exploit',
+      owner: 'Nathan'
     });
-    cars.push({
-      make: 'Hyundai',
-      model: 'Tucson',
-      color: 'green',
-      owner: 'Jin Soo'
+    dips.push({
+      university: 'HEC',
+      degree: 'Business',
+      spe: 'export',
+      owner: 'Marion'
     });
-    cars.push({
-      make: 'Volkswagen',
-      model: 'Passat',
-      color: 'yellow',
-      owner: 'Max'
+    dips.push({
+      university: 'Descartes',
+      degree: 'Psyco',
+      spe: 'Children Psyco',
+      owner: 'Corentine'
     });
-    cars.push({
-      make: 'Tesla',
-      model: 'S',
-      color: 'black',
-      owner: 'Adriana'
+    dips.push({
+      university: 'Assas',
+      degree: 'Law',
+      spe: 'Divorce lawyer',
+      owner: 'Nassin'
     });
-    cars.push({
-      make: 'Peugeot',
-      model: '205',
-      color: 'purple',
-      owner: 'Michel'
+    dips.push({
+      university: 'Huston',
+      degree: 'Engineer',
+      spe: 'Aviation',
+      owner: 'Paul'
     });
-    cars.push({
-      make: 'Chery',
-      model: 'S22L',
-      color: 'white',
-      owner: 'Aarav'
+    dips.push({
+      university: 'Paris IV',
+      degree: 'Physics',
+      spe: 'Quantum',
+      owner: 'Sergei'
     });
-    cars.push({
-      make: 'Fiat',
-      model: 'Punto',
-      color: 'violet',
-      owner: 'Pari'
+    dips.push({
+      university: 'ESCE',
+      degree: 'International business',
+      spe: 'Usa Specialist',
+      owner: 'Chloe'
     });
-    cars.push({
-      make: 'Tata',
-      model: 'Nano',
-      color: 'indigo',
-      owner: 'Valeria'
+    dips.push({
+      university: 'IPSA',
+      degree: 'Engineer',
+      spe: 'Spatial',
+      owner: 'Stephen'
     });
-    cars.push({
-      make: 'Holden',
-      model: 'Barina',
-      color: 'brown',
-      owner: 'Shotaro'
+    dips.push({
+      university: 'Mines Paris',
+      degree: 'Engineer',
+      spe: 'Agro',
+      owner: 'Patrick'
     });
 
-    for (let i = 0; i < cars.length; i++) {
-      cars[i].docType = 'car';
-      await stub.putState('CAR' + i, Buffer.from(JSON.stringify(cars[i])));
-      console.info('Added <--> ', cars[i]);
+    for (let i = 0; i < dips.length; i++) {
+      dips[i].docType = 'dip';
+      await stub.putState('DIP' + i, Buffer.from(JSON.stringify(dips[i])));
+      console.info('Added <--> ', dips[i]);
     }
     console.info('============= END : Initialize Ledger ===========');
   }
 
-  async createCar(stub, args) {
-    console.info('============= START : Create Car ===========');
+  async createDiplome(stub, args) {
+    console.info('============= START : Create Diplome ===========');
     if (args.length != 5) {
       throw new Error('Incorrect number of arguments. Expecting 5');
     }
 
-    var car = {
-      docType: 'car',
-      make: args[1],
-      model: args[2],
-      color: args[3],
+    var dip = {
+      docType: 'dip',
+      university: args[1],
+      degree: args[2],
+      spe: args[3],
       owner: args[4]
     };
 
-    await stub.putState(args[0], Buffer.from(JSON.stringify(car)));
-    console.info('============= END : Create Car ===========');
+    await stub.putState(args[0], Buffer.from(JSON.stringify(dip)));
+    console.info('============= END : Create Diplome ===========');
   }
 
-  async queryAllCars(stub, args) {
+  async queryAllDiplomes(stub, args) {
 
-    let startKey = 'CAR0';
-    let endKey = 'CAR999';
+    let startKey = 'DIP0';
+    let endKey = 'DIP999';
 
     let iterator = await stub.getStateByRange(startKey, endKey);
 
@@ -175,18 +175,18 @@ let Chaincode = class {
     }
   }
 
-  async changeCarOwner(stub, args) {
-    console.info('============= START : changeCarOwner ===========');
+  async changeDiplomeOwner(stub, args) {
+    console.info('============= START : changeDiplomeOwner ===========');
     if (args.length != 2) {
       throw new Error('Incorrect number of arguments. Expecting 2');
     }
 
-    let carAsBytes = await stub.getState(args[0]);
-    let car = JSON.parse(carAsBytes);
-    car.owner = args[1];
+    let dipAsBytes = await stub.getState(args[0]);
+    let dip = JSON.parse(dipAsBytes);
+    dip.owner = args[1];
 
-    await stub.putState(args[0], Buffer.from(JSON.stringify(car)));
-    console.info('============= END : changeCarOwner ===========');
+    await stub.putState(args[0], Buffer.from(JSON.stringify(dip)));
+    console.info('============= END : changeDiplomeOwner ===========');
   }
 };
 
